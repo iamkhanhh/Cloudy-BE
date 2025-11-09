@@ -1,22 +1,35 @@
-import { IsEmail, IsNotEmpty, IsOptional } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsEnum } from "class-validator";
+import { UserRoleEnum } from "@/enums/user-role.enum";
+import { UserStatusEnum } from "@/enums/user-status.enum";
 
 export class CreateUserDto {
   @IsNotEmpty()
-  name: string;
-
-  @IsNotEmpty()
   @IsEmail()
   email: string;
-  
+
   @IsNotEmpty()
   password: string;
 
   @IsOptional()
-  phone: string;
+  first_name: string;
 
   @IsOptional()
-  address: string;
+  last_name: string;
 
   @IsOptional()
-  image: string;
+  phone_number: string;
+
+  @IsOptional()
+  bio: string;
+
+  @IsOptional()
+  avatar_path: string;
+
+  @IsOptional()
+  @IsEnum(UserRoleEnum)
+  role: UserRoleEnum;
+
+  @IsOptional()
+  @IsEnum(UserStatusEnum)
+  status: UserStatusEnum;
 }
