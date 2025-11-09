@@ -8,7 +8,7 @@ export class CreateAuthDto {
   @IsString()
   @MinLength(5)
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-      message: 'Minimum five characters, at least one letter, one number and one special character',
+      message: 'Password must be minimum five characters, at least one letter, one number and one special character',
   }) 
   password: string
 

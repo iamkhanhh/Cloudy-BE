@@ -190,4 +190,26 @@ export class UsersService {
       }
     };
   }
+
+  async activateAccount(code: string, id: number) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new BadRequestException('This account is not exist!')
+    }
+
+    const isCodeValid = new Date() < user.codeExpired;
+    if (isCodeValid) {
+      if (code == user.codeId) {
+        await this.usersRepository.update({ id }, { status: UserStatusEnum.ACTIVE });
+        return {
+          status: 'success',
+          message: 'Your account has been active!!'
+        }
+      } else {
+        throw new BadRequestException('Code active is not correct!')
+      }
+    } else {
+      throw new BadRequestException('Code active has been expired! Please get another code!')
+    }
+  }
 }

@@ -48,4 +48,8 @@ export class AuthService {
   async register(createAuthDto: CreateAuthDto) {
     return await this.usersService.register(createAuthDto);
   }
+
+  async activateAccount(activateDto: any, id: number) {
+    return await this.usersService.activateAccount(activateDto.code, id);
+  }
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Request, Get, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, Request, Get, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './passport/local-auth.guard';
 import { JwtAuthGuard } from './passport/jwt-auth.guard';
@@ -25,5 +25,14 @@ export class AuthController {
   @Post('register')
   register(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.register(createAuthDto);
+  }
+
+  @Public()
+  @Post('activate-account/:id')
+  activateAccount(
+    @Body() activateDto: any,
+    @Param('id', ParseIntPipe) id: number
+  ) {
+    return this.authService.activateAccount(activateDto, id);
   }
 }
