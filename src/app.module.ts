@@ -9,12 +9,16 @@ import { JwtAuthGuard } from './auth/passport/jwt-auth.guard';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AlbumMedia, Albums, Comments, EmailAttachments, EmailLogs, Media, MediaTags, Shares, Tags, Users } from './entities';
+import { AuthGuard } from './auth/passport/auth.guard';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
     UsersModule,
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
+    CommonModule,
     MailerModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
         transport: {
@@ -49,7 +53,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABSE'),
-        entities: [],
+        entities: [Users, Tags, Shares, Media, MediaTags, EmailLogs, EmailAttachments, Comments, Albums, AlbumMedia],
         synchronize: false,
       }),
       inject: [ConfigService],
@@ -60,7 +64,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     AppService,
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: AuthGuard,
     },
   ],
 })

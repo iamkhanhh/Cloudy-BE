@@ -1,12 +1,34 @@
-import { IsNotEmpty, IsOptional } from "class-validator"
+import { IsNotEmpty, IsOptional, IsString, Matches, MinLength } from "class-validator"
 
 export class CreateAuthDto {
   @IsNotEmpty()
   email: string
 
   @IsNotEmpty()
+  @IsString()
+  @MinLength(5)
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+      message: 'Password must be minimum five characters, at least one letter, one number and one special character',
+  }) 
   password: string
 
   @IsOptional()
-  name: string
+  @IsString()
+  first_name: string
+
+  @IsOptional()
+  @IsString()
+  last_name: string
+
+  @IsOptional()
+  @IsString()
+  address: string
+
+  @IsOptional()
+  @IsString()
+  bio: string
+
+  @IsOptional()
+  @IsString()
+  phone_number: string
 }
