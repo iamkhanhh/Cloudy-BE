@@ -8,7 +8,4 @@ export class AlbumMedia extends AbstractEntity{
 
   @PrimaryColumn({ type: 'int' })
   media_id: number;
-
-  @Column({ type: 'int', nullable: true })
-  added_by: number;
 }

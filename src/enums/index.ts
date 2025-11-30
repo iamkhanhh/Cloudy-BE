@@ -5,3 +5,4 @@ export * from './share-permission.enum';
 export * from './email-status.enum';
 export * from './processing-status.enum';
 export * from './user-status.enum';
+export * from './resource-type.enum';

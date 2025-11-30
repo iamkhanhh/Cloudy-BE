@@ -1,31 +1,38 @@
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, IsDateString } from 'class-validator';
-import { SharePermissionEnum } from '@/enums';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ResourceTypeEnum, SharePermissionEnum } from '@/enums';
 
 export class CreateShareDto {
+  @ApiProperty({
+    description: 'Type of resource to share',
+    enum: ResourceTypeEnum,
+    example: ResourceTypeEnum.MEDIA
+  })
   @IsNotEmpty()
-  @IsString()
-  resource_type: string;
+  @IsEnum(ResourceTypeEnum)
+  resource_type: ResourceTypeEnum;
 
+  @ApiProperty({
+    description: 'ID of the resource to share',
+    example: 1
+  })
   @IsNotEmpty()
   @IsInt()
   resource_id: number;
 
-  @IsNotEmpty()
-  @IsInt()
-  owner_id: number;
-
+  @ApiPropertyOptional({
+    description: 'Permission level for the share',
+    enum: SharePermissionEnum,
+    example: SharePermissionEnum.VIEW
+  })
   @IsOptional()
   @IsEnum(SharePermissionEnum)
   permission?: SharePermissionEnum;
 
-  @IsOptional()
-  @IsString()
-  password_hash?: string;
-
+  @ApiProperty({
+    description: 'Email of the user to share with',
+    example: 'friend@example.com'
+  })
   @IsString()
   receiver_email: string;
-
-  @IsOptional()
-  @IsDateString()
-  expires_at?: Date;
 }

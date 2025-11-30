@@ -39,7 +39,6 @@ export class MediaService {
       const mediaAlbum = new AlbumMedia();
       mediaAlbum.album_id = album.data.id;
       mediaAlbum.media_id = savedMedia.id;
-      mediaAlbum.added_by = userId;
 
       await this.albumMediaRepository.save(mediaAlbum);
     }
