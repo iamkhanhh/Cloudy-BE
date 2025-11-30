@@ -38,7 +38,7 @@ export class MediaController {
   @ApiResponse({ status: 200, description: 'Media items retrieved successfully' })
   findAll(
     @Request() req,
-    @Query('albumId', new ParseIntPipe({ optional: true })) albumId?: number,
+    @Query('albumId') albumId?: number,
   ) {
     return this.mediaService.findAll(req.user?.id, albumId);
   }
@@ -70,7 +70,7 @@ export class MediaController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateMediaDto: UpdateMediaDto,
   ) {
-    return this.mediaService.update({ ...updateMediaDto, id });
+    return this.mediaService.update({ ...updateMediaDto }, id);
   }
 
   @Delete(':id')

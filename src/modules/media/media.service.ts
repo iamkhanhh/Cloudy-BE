@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Not, In } from 'typeorm';
+import { Repository, Not, In, Like } from 'typeorm';
 import { Media, AlbumMedia } from '@/entities';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
@@ -105,8 +105,8 @@ export class MediaService {
     };
   }
 
-  async update(updateMediaDto: UpdateMediaDto) {
-    const { id, ...rest } = updateMediaDto;
+  async update(updateMediaDto: UpdateMediaDto, id: number) {
+    const { ...rest } = updateMediaDto;
 
     const existingMedia = await this.mediaRepository.findOne({
       where: { id, is_deleted: 0 },
@@ -148,7 +148,7 @@ export class MediaService {
     };
 
     if (searchTerm) {
-      where.filename = In([`%${searchTerm}%`]);
+      where.filename = Like(`%${searchTerm}%`);
     }
 
     const dataMedia = await this.mediaRepository.find({

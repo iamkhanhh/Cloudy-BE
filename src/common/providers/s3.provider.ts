@@ -36,7 +36,7 @@ export class S3Provider {
             Bucket: this.configService.get<string>('AWS_BUCKET'),
             Key: fileName,
             Expires: 60 * 60,
-            ContentType: contentType,
+            ResponseContentType: contentType,
         };
         return this.s3Client.getSignedUrlPromise('getObject', params);
     }

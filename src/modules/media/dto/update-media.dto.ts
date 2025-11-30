@@ -4,11 +4,5 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty } from 'class-validator';
 
 export class UpdateMediaDto extends PartialType(CreateMediaDto) {
-  @ApiProperty({
-    description: 'Media ID',
-    example: 1
-  })
-  @IsNotEmpty()
-  @IsInt()
-  id: number;
+
 }
