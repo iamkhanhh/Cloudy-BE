@@ -37,17 +37,8 @@ exports.up = function(db, callback) {
 			length: 255,
 			required: true
 		},
-		token: {
-			type: 'string',
-		},
-		password_hash: {
-			type: 'string',
-		},
 		receiver_id: {
 			type: 'int'
-		},
-		expires_at: {
-			type: 'timestamp',
 		},
 		is_deleted: {
 			type: 'int',

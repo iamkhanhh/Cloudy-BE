@@ -29,9 +29,6 @@ exports.up = function(db, callback) {
 		media_id: {
 			type: 'int'
 		},
-		added_by: {
-			type: 'int'
-		},
 		is_deleted: {
 			type: 'int',
 			length: 1,

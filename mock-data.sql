@@ -41,23 +41,23 @@ INSERT INTO users (email, password, first_name, last_name, phone_number, bio, av
 -- Visibility values: PRIVATE, PUBLIC
 -- Processing status values: PENDING, PROCESSING, DONE, ERROR
 
-INSERT INTO media (owner_id, type, mime_type, filename, size, duration_ms, visibility, processing_status, caption, is_deleted, createdAt, updatedAt) VALUES
+INSERT INTO media (owner_id, type, mime_type, filename, size, duration_ms, visibility, processing_status, file_path, caption, is_deleted, createdAt, updatedAt) VALUES
 -- John's media
-(1, 'IMAGE', 'image/jpeg', 'sunset-beach.jpg', 2048576, NULL, 'PUBLIC', 'DONE', 'Beautiful sunset at the beach', 0, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
-(1, 'IMAGE', 'image/png', 'mountain-view.png', 3145728, NULL, 'PUBLIC', 'DONE', 'Mountain hiking adventure', 0, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
-(1, 'VIDEO', 'video/mp4', 'nature-walk.mp4', 52428800, 45000, 'PUBLIC', 'DONE', 'Nature walk in the forest', 0, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
-(1, 'IMAGE', 'image/jpeg', 'private-photo.jpg', 1048576, NULL, 'PRIVATE', 'DONE', 'Personal photo', 0, DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(1, 'IMAGE', 'image/jpeg', 'sunset-beach.jpg', 2048576, NULL, 'PUBLIC', 'DONE', '/uploads/1/sunset-beach.jpg', 'Beautiful sunset at the beach', 0, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(1, 'IMAGE', 'image/png', 'mountain-view.png', 3145728, NULL, 'PUBLIC', 'DONE', '/uploads/1/mountain-view.png', 'Mountain hiking adventure', 0, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(1, 'VIDEO', 'video/mp4', 'nature-walk.mp4', 52428800, 45000, 'PUBLIC', 'DONE', '/uploads/1/nature-walk.mp4', 'Nature walk in the forest', 0, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(1, 'IMAGE', 'image/jpeg', 'private-photo.jpg', 1048576, NULL, 'PRIVATE', 'DONE', '/uploads/1/private-photo.jpg', 'Personal photo', 0, DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY)),
 
 -- Jane's media
-(2, 'IMAGE', 'image/jpeg', 'paris-eiffel.jpg', 2621440, NULL, 'PUBLIC', 'DONE', 'Eiffel Tower in Paris', 0, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
-(2, 'IMAGE', 'image/jpeg', 'italian-pasta.jpg', 1572864, NULL, 'PUBLIC', 'DONE', 'Delicious Italian pasta', 0, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
-(2, 'VIDEO', 'video/mp4', 'tokyo-street.mp4', 104857600, 120000, 'PUBLIC', 'DONE', 'Walking through Tokyo streets', 0, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
-(2, 'IMAGE', 'image/jpeg', 'processing-image.jpg', 2097152, NULL, 'PRIVATE', 'PROCESSING', 'Currently being processed', 0, DATE_SUB(NOW(), INTERVAL 1 HOUR), DATE_SUB(NOW(), INTERVAL 1 HOUR)),
+(2, 'IMAGE', 'image/jpeg', 'paris-eiffel.jpg', 2621440, NULL, 'PUBLIC', 'DONE', '/uploads/2/paris-eiffel.jpg', 'Eiffel Tower in Paris', 0, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(2, 'IMAGE', 'image/jpeg', 'italian-pasta.jpg', 1572864, NULL, 'PUBLIC', 'DONE', '/uploads/2/italian-pasta.jpg', 'Delicious Italian pasta', 0, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(2, 'VIDEO', 'video/mp4', 'tokyo-street.mp4', 104857600, 120000, 'PUBLIC', 'DONE', '/uploads/2/tokyo-street.mp4', 'Walking through Tokyo streets', 0, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(2, 'IMAGE', 'image/jpeg', 'processing-image.jpg', 2097152, NULL, 'PRIVATE', 'PROCESSING', '/uploads/2/processing-image.jpg', 'Currently being processed', 0, DATE_SUB(NOW(), INTERVAL 1 HOUR), DATE_SUB(NOW(), INTERVAL 1 HOUR)),
 
 -- Alice's media
-(5, 'VIDEO', 'video/mp4', 'pending-upload.mp4', 157286400, 180000, 'PRIVATE', 'PENDING', 'Video pending processing', 0, DATE_SUB(NOW(), INTERVAL 30 MINUTE), DATE_SUB(NOW(), INTERVAL 30 MINUTE)),
-(5, 'IMAGE', 'image/jpeg', 'failed-upload.jpg', 5242880, NULL, 'PRIVATE', 'ERROR', 'Failed to process this image', 0, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
-(5, 'VIDEO', 'video/mp4', 'tutorial-video.mp4', 209715200, 300000, 'PUBLIC', 'DONE', 'Photography tutorial', 0, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY));
+(5, 'VIDEO', 'video/mp4', 'pending-upload.mp4', 157286400, 180000, 'PRIVATE', 'PENDING', '/uploads/5/pending-upload.mp4', 'Video pending processing', 0, DATE_SUB(NOW(), INTERVAL 30 MINUTE), DATE_SUB(NOW(), INTERVAL 30 MINUTE)),
+(5, 'IMAGE', 'image/jpeg', 'failed-upload.jpg', 5242880, NULL, 'PRIVATE', 'ERROR', '/uploads/5/failed-upload.jpg', 'Failed to process this image', 0, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(5, 'VIDEO', 'video/mp4', 'tutorial-video.mp4', 209715200, 300000, 'PUBLIC', 'DONE', '/uploads/5/tutorial-video.mp4', 'Photography tutorial', 0, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY));
 
 -- ========================= Albums =========================
 INSERT INTO albums (owner_id, name, description, cover_media_id, visibility, is_deleted, createdAt, updatedAt) VALUES
@@ -69,16 +69,16 @@ INSERT INTO albums (owner_id, name, description, cover_media_id, visibility, is_
 (1, 'Private Memories', 'Personal collection', 4, 'PRIVATE', 0, DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY));
 
 -- ========================= Album Media Relations =========================
-INSERT INTO album_media (album_id, media_id, added_by, createdAt, updatedAt, is_deleted) VALUES
-(1, 1, 1, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY), 0),
-(1, 3, 1, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY), 0),
-(2, 2, 1, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY), 0),
-(2, 1, 1, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY), 0),
-(3, 5, 2, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY), 0),
-(3, 7, 2, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY), 0),
-(4, 6, 2, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY), 0),
-(5, 11, 5, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY), 0),
-(6, 4, 1, DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY), 0);
+INSERT INTO album_media (album_id, media_id, is_deleted, createdAt, updatedAt) VALUES
+(1, 1, 0, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(1, 3, 0, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(2, 2, 0, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(2, 1, 0, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(3, 5, 0, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(3, 7, 0, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(4, 6, 0, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(5, 11, 0, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(6, 4, 0, DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY));
 
 -- ========================= Tags =========================
 INSERT INTO tags (name, is_deleted, createdAt, updatedAt) VALUES
@@ -94,41 +94,41 @@ INSERT INTO tags (name, is_deleted, createdAt, updatedAt) VALUES
 ('photography', 0, DATE_SUB(NOW(), INTERVAL 20 DAY), DATE_SUB(NOW(), INTERVAL 20 DAY));
 
 -- ========================= Media Tags =========================
-INSERT INTO media_tags (media_id, tag_id, createdAt, updatedAt, is_deleted) VALUES
-(1, 1, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY), 0),
-(1, 2, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY), 0),
-(1, 4, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY), 0),
-(2, 3, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY), 0),
-(2, 4, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY), 0),
-(3, 4, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY), 0),
-(5, 5, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY), 0),
-(5, 7, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY), 0),
-(6, 6, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY), 0),
-(7, 5, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY), 0),
-(7, 8, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY), 0),
-(11, 9, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY), 0),
-(11, 10, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY), 0);
+INSERT INTO media_tags (media_id, tag_id, is_deleted, createdAt, updatedAt) VALUES
+(1, 1, 0, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(1, 2, 0, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(1, 4, 0, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(2, 3, 0, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(2, 4, 0, DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(3, 4, 0, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(5, 5, 0, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(5, 7, 0, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(6, 6, 0, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(7, 5, 0, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(7, 8, 0, DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(11, 9, 0, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(11, 10, 0, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY));
 
 -- ========================= Shares =========================
 -- Permission values: VIEW, EDIT
 -- resource_type values: MEDIA, ALBUM
 
-INSERT INTO shares (resource_type, resource_id, owner_id, permission, token, password_hash, receiver_id, expires_at, is_deleted, createdAt, updatedAt) VALUES
--- Public share links (no receiver, no password)
-('MEDIA', 1, 1, 'VIEW', 'abc123def456ghi789jkl012mno345pqr678stu901vwx234yz567abc890def123', NULL, NULL, DATE_ADD(NOW(), INTERVAL 30 DAY), 0, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
-('ALBUM', 1, 1, 'VIEW', 'def456ghi789jkl012mno345pqr678stu901vwx234yz567abc890def123ghi456', NULL, NULL, DATE_ADD(NOW(), INTERVAL 60 DAY), 0, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
+INSERT INTO shares (resource_type, resource_id, owner_id, permission, receiver_id, is_deleted, createdAt, updatedAt) VALUES
+-- Share media to Jane
+('MEDIA', 1, 1, 'VIEW', 2, 0, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
+('ALBUM', 1, 1, 'VIEW', 2, 0, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
 
--- Password protected share
-('MEDIA', 5, 2, 'VIEW', 'ghi789jkl012mno345pqr678stu901vwx234yz567abc890def123ghi456jkl789', '$2b$10$somehashedpasswordhere12345678901234567890123456789012', NULL, DATE_ADD(NOW(), INTERVAL 7 DAY), 0, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
+-- Share to another user
+('MEDIA', 5, 2, 'VIEW', 1, 0, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
 
 -- Share with specific receiver
-('ALBUM', 3, 2, 'VIEW', 'jkl012mno345pqr678stu901vwx234yz567abc890def123ghi456jkl789mno012', NULL, 1, DATE_ADD(NOW(), INTERVAL 90 DAY), 0, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
+('ALBUM', 3, 2, 'VIEW', 1, 0, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
 
 -- Edit permission share
-('MEDIA', 11, 5, 'EDIT', 'mno345pqr678stu901vwx234yz567abc890def123ghi456jkl789mno012pqr345', NULL, 2, NULL, 0, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
+('MEDIA', 11, 5, 'EDIT', 2, 0, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
 
--- Expired share
-('MEDIA', 2, 1, 'VIEW', 'pqr678stu901vwx234yz567abc890def123ghi456jkl789mno012pqr345stu678', NULL, NULL, DATE_SUB(NOW(), INTERVAL 5 DAY), 0, DATE_SUB(NOW(), INTERVAL 15 DAY), DATE_SUB(NOW(), INTERVAL 15 DAY));
+-- Another share
+('MEDIA', 2, 1, 'VIEW', 5, 0, DATE_SUB(NOW(), INTERVAL 15 DAY), DATE_SUB(NOW(), INTERVAL 15 DAY));
 
 -- ========================= Email Logs =========================
 -- Status values: QUEUED, SENT, FAILED
