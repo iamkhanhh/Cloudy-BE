@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { UsersModule } from '@/modules/users/users.module';
+import { MediaModule } from '@/modules/media/media.module';
+import { AlbumsModule } from '@/modules/albums/albums.module';
+import { SharesModule } from '@/modules/shares/shares.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from '@/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
@@ -16,6 +19,9 @@ import { CommonModule } from './common/common.module';
 @Module({
   imports: [
     UsersModule,
+    MediaModule,
+    AlbumsModule,
+    SharesModule,
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     CommonModule,

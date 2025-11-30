@@ -1,4 +1,4 @@
 export enum SharePermissionEnum {
   VIEW = 'VIEW',
-  EDIT = 'EDIT',
+  DOWNLOAD = 'DOWNLOAD',
 }

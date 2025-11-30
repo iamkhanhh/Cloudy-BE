@@ -18,75 +18,27 @@ export class S3Provider {
         private readonly configService: ConfigService
     ) { }
 
-    async copyObject(source: string, destination: string) {
-        try {
-            process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-            await this.s3Client.copyObject({
-                Key: destination,
-                CopySource: source,
-                Bucket: this.configService.get('AWS_BUCKET')
-            }).promise();
-        } catch (error) {
-            console.error('S3Provider@copyObject:', error);
-            throw error;
-        }
-    }
-
-    async generateSinglePresignedUrl(fileName: string): Promise<string> {
+    async generateSinglePresignedUrl(fileName: string): Promise<{ url: string; contentType: string }> {
+        const contentType = this.getContentTypeFromFileName(fileName);
         const params = {
             Bucket: this.configService.get<string>('AWS_BUCKET'),
             Key: fileName,
             Expires: 60 * 5,
             // ACL: 'bucket-owner-full-control',
-            ContentType: 'text/vcard',
+            ContentType: contentType,
         };
-        return this.s3Client.getSignedUrlPromise('putObject', params);
+        const url = await this.s3Client.getSignedUrlPromise('putObject', params);
+        return { url, contentType };
     }
 
-    async startMultipartUpload(fileName: string) {
-        const params: S3.CreateMultipartUploadRequest = {
+    async getS3Url(fileName: string, contentType: string): Promise<string> {
+        const params = {
             Bucket: this.configService.get<string>('AWS_BUCKET'),
             Key: fileName,
-            ContentType: 'text/vcard'
+            Expires: 60 * 60,
+            ContentType: contentType,
         };
-
-        const multipart = await this.s3Client.createMultipartUpload(params).promise();
-        return multipart.UploadId;
-    }
-
-    async generatePresignedUrls(fileName: string, uploadId: string, partNumbers: number) {
-        const totalParts = Array.from({ length: partNumbers }, (_, i) => i + 1);
-
-        const presignedUrls = await Promise.all(
-            totalParts.map(async (partNumber) => {
-                const params = {
-                    Bucket: this.configService.get<string>('AWS_BUCKET'),
-                    Key: fileName,
-                    PartNumber: partNumber,
-                    UploadId: uploadId,
-                    Expires: 60 * 60,
-                };
-                return this.s3Client.getSignedUrlPromise('uploadPart', params);
-            }),
-        );
-
-        return presignedUrls;
-    }
-
-    async completeMultipartUpload(fileName: string, uploadId: string, parts: { etag: string }[]) {
-        const params: S3.CompleteMultipartUploadRequest = {
-            Bucket: this.configService.get<string>('AWS_BUCKET'),
-            Key: fileName,
-            UploadId: uploadId,
-            MultipartUpload: {
-                Parts: parts.map((part, index) => ({
-                    ETag: part.etag,
-                    PartNumber: index + 1,
-                })),
-            },
-        };
-
-        return await this.s3Client.completeMultipartUpload(params).promise();
+        return this.s3Client.getSignedUrlPromise('getObject', params);
     }
 
     generateFileName(name: string) {
@@ -98,5 +50,75 @@ export class S3Provider {
         let timeStamp = new Date().getTime().toString().trim();
 
         return `${baseName}-${timeStamp}-${uuidv4()}${extension}`;
+    }
+
+    /**
+     * Get content type (MIME type) from file extension
+     */
+    getContentTypeFromFileName(fileName: string): string {
+        const extension = path.extname(fileName).toLowerCase().replace('.', '');
+
+        const mimeTypes: Record<string, string> = {
+            // Images
+            'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'png': 'image/png',
+            'gif': 'image/gif',
+            'webp': 'image/webp',
+            'svg': 'image/svg+xml',
+            'bmp': 'image/bmp',
+            'ico': 'image/x-icon',
+            'tiff': 'image/tiff',
+            'tif': 'image/tiff',
+
+            // Videos
+            'mp4': 'video/mp4',
+            'mov': 'video/quicktime',
+            'avi': 'video/x-msvideo',
+            'mkv': 'video/x-matroska',
+            'webm': 'video/webm',
+            'flv': 'video/x-flv',
+            'wmv': 'video/x-ms-wmv',
+            'mpeg': 'video/mpeg',
+            'mpg': 'video/mpeg',
+            'm4v': 'video/x-m4v',
+
+            // Documents
+            'pdf': 'application/pdf',
+            'doc': 'application/msword',
+            'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xls': 'application/vnd.ms-excel',
+            'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'ppt': 'application/vnd.ms-powerpoint',
+            'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'txt': 'text/plain',
+            'csv': 'text/csv',
+            'rtf': 'application/rtf',
+
+            // Archives
+            'zip': 'application/zip',
+            'rar': 'application/x-rar-compressed',
+            '7z': 'application/x-7z-compressed',
+            'tar': 'application/x-tar',
+            'gz': 'application/gzip',
+
+            // Audio
+            'mp3': 'audio/mpeg',
+            'wav': 'audio/wav',
+            'ogg': 'audio/ogg',
+            'flac': 'audio/flac',
+            'aac': 'audio/aac',
+            'm4a': 'audio/mp4',
+            'wma': 'audio/x-ms-wma',
+
+            // Other
+            'json': 'application/json',
+            'xml': 'application/xml',
+            'html': 'text/html',
+            'css': 'text/css',
+            'js': 'application/javascript',
+        };
+
+        return mimeTypes[extension] || 'application/octet-stream';
     }
 }

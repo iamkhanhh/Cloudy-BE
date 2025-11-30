@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAuthDto } from '@/auth/dto/create-auth.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { v4 as uuidv4 } from 'uuid';
 import * as dayjs from 'dayjs';
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -146,6 +145,13 @@ export class UsersService {
     }
   }
 
+  /**
+   * Generate a random 6-digit activation code
+   */
+  private generateActivationCode(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
   async register(createAuthDto: CreateAuthDto) {
     const { email, password, first_name, last_name, phone_number, bio } = createAuthDto;
 
@@ -155,7 +161,7 @@ export class UsersService {
     }
 
     const hashPassword = await this.hashingPasswordProvider.hashPasswordHelper(password);
-    const codeId = uuidv4();
+    const codeId = this.generateActivationCode();
     const newUser = new Users();
 
     newUser.email = email;

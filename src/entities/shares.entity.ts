@@ -21,14 +21,11 @@ export class Shares extends AbstractEntity {
   })
   permission: SharePermissionEnum;
 
-  @Column({ type: 'char', length: 64, unique: true, nullable: false })
-  token: string;
-
   @Column({ type: 'varchar', length: 255, nullable: true })
   password_hash: string;
 
-  @Column({ type: 'int', nullable: true })
-  receiver_id: number;
+  @Column({ type: 'varchar', nullable: true })
+  receiver_id: string;
 
   @Column({ type: 'timestamp', nullable: true })
   expires_at: Date;
