@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, HttpCode, HttpStatus, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,6 +17,16 @@ export class UsersController {
   @ApiResponse({ status: 400, description: 'Invalid input' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Get('storage')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get user storage', description: 'Get storage usage by category (IMAGE/VIDEO) in GB for the current user' })
+  @ApiResponse({ status: 200, description: 'Storage information retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  getUserStorage(@Request() req) {
+    return this.usersService.getUserStorage(+req.user?.id);
   }
 
   @Get()

@@ -52,4 +52,8 @@ export class AuthService {
   async activateAccount(activateDto: any, id: number) {
     return await this.usersService.activateAccount(activateDto.code, id);
   }
+
+  async getCurrentUser(userId: number) {
+    return await this.usersService.findOne(userId);
+  }
 }

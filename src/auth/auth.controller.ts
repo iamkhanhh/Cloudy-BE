@@ -1,5 +1,5 @@
 import { Controller, Post, UseGuards, Request, Get, Body, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './passport/local-auth.guard';
 import { JwtAuthGuard } from './passport/jwt-auth.guard';
@@ -7,6 +7,7 @@ import { Public } from '@/decorators';
 import { CreateAuthDto } from './dto/create-auth.dto';
 
 @ApiTags('auth')
+@ApiBearerAuth('JWT-auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -53,5 +54,13 @@ export class AuthController {
     @Param('id', ParseIntPipe) id: number
   ) {
     return this.authService.activateAccount(activateDto, id);
+  }
+
+  @Get('me')
+  @ApiOperation({ summary: 'Get current user', description: 'Get current authenticated user information' })
+  @ApiResponse({ status: 200, description: 'Current user retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  getCurrentUser(@Request() req) {
+    return this.authService.getCurrentUser(req.user.id);
   }
 }

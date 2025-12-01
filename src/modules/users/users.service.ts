@@ -6,8 +6,8 @@ import * as dayjs from 'dayjs';
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from '@/entities';
-import { UserStatusEnum } from '@/enums';
+import { Users, Media, Albums, AlbumMedia } from '@/entities';
+import { UserStatusEnum, MediaTypeEnum } from '@/enums';
 import { HashingPasswordProvider } from '@/common/providers/hashing-password.provider';
 import { UserRoleEnum } from '@/enums/user-role.enum';
 
@@ -16,6 +16,9 @@ export class UsersService {
 
   constructor(
     @InjectRepository(Users) private usersRepository: Repository<Users>,
+    @InjectRepository(Media) private mediaRepository: Repository<Media>,
+    @InjectRepository(Albums) private albumsRepository: Repository<Albums>,
+    @InjectRepository(AlbumMedia) private albumMediaRepository: Repository<AlbumMedia>,
     private readonly mailerService: MailerService,
     private readonly hashingPasswordProvider: HashingPasswordProvider,
   ) {}
@@ -97,9 +100,24 @@ export class UsersService {
       throw new BadRequestException('User not found');
     }
 
+    const allDirectMedia = await this.mediaRepository.find({
+      where: { owner_id: id, is_deleted: 0 }
+    });
+
+    const userAlbums = await this.albumsRepository.find({
+      where: { owner_id: id, is_deleted: 0 }
+    });
+
+    let size_total = await this.getUserStorage(id);
+
     return {
       status: 'success',
-      data: user
+      data: {
+        ...user,
+        media_count: allDirectMedia.length,
+        albums_count: userAlbums.length,
+        total: size_total.data.TOTAL
+      }
     };
   }
 
@@ -217,5 +235,71 @@ export class UsersService {
     } else {
       throw new BadRequestException('Code active has been expired! Please get another code!')
     }
+  }
+
+  async getUserStorage(userId: number) {
+    const user = await this.usersRepository.findOne({ where: { id: userId, is_deleted: 0 } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const allDirectMedia = await this.mediaRepository.find({
+      where: { owner_id: userId, is_deleted: 0 },
+      select: ['type', 'size']
+    });
+
+    const userAlbums = await this.albumsRepository.find({
+      where: { owner_id: userId, is_deleted: 0 },
+      select: ['id']
+    });
+
+    const albumIds = userAlbums.map(album => album.id);
+
+    let allAlbumMedia = [];
+    if (albumIds.length > 0) {
+      const albumMediaLinks = await this.albumMediaRepository.find({
+        where: albumIds.map(albumId => ({ album_id: albumId })),
+        select: ['media_id']
+      });
+
+      const mediaIds = albumMediaLinks.map(link => link.media_id);
+
+      if (mediaIds.length > 0) {
+        allAlbumMedia = await this.mediaRepository.find({
+          where: mediaIds.map(mediaId => ({ id: mediaId, is_deleted: 0 })),
+          select: ['type', 'size']
+        });
+      }
+    }
+
+    const storageByCategory: any = {
+      IMAGE: 0,
+      VIDEO: 0,
+    };
+
+    allDirectMedia.forEach(media => {
+      const size = media.size || 0;
+      storageByCategory[media.type] = (storageByCategory[media.type] || 0) + size;
+    });
+
+    allAlbumMedia.forEach(media => {
+      const size = media.size || 0;
+      storageByCategory[media.type] = (storageByCategory[media.type] || 0) + size;
+    });
+
+    const convertToGB = (bytes: number) => {
+      return parseFloat((bytes / (1024 * 1024 * 1024)).toFixed(4));
+    };
+
+    const storageInGB = {
+      IMAGE: convertToGB(storageByCategory.IMAGE),
+      VIDEO: convertToGB(storageByCategory.VIDEO),
+      TOTAL: convertToGB(storageByCategory.IMAGE + storageByCategory.VIDEO),
+    };
+
+    return {
+      status: 'success',
+      data: storageInGB
+    };
   }
 }
