@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
   ParseIntPipe,
   Request
 } from '@nestjs/common';
@@ -55,7 +54,7 @@ export class AlbumsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
-    return this.albumsService.update({ ...updateAlbumDto, id });
+    return this.albumsService.update({ ...updateAlbumDto }, id);
   }
 
   @Delete(':id')

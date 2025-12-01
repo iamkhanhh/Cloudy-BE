@@ -100,7 +100,7 @@ export class MediaService {
       status: 'success',
       data: {
         ...media,
-        file_path: this.s3Provider.getS3Url(media.file_path, media.mime_type),
+        file_path: await this.s3Provider.getS3Url(media.file_path, media.mime_type),
       },
     };
   }

@@ -5,13 +5,18 @@ import { Shares } from '@/entities';
 import { CreateShareDto } from './dto/create-share.dto';
 import { UpdateShareDto } from './dto/update-share.dto';
 import { UsersService } from '../users/users.service';
+import { MediaService } from '../media/media.service';
+import { AlbumsService } from '../albums/albums.service';
+import { ResourceTypeEnum } from '@/enums';
 
 @Injectable()
 export class SharesService {
   constructor(
     @InjectRepository(Shares)
     private readonly sharesRepository: Repository<Shares>,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
+    private readonly mediaService: MediaService,
+    private readonly albumsService: AlbumsService
   ) {}
 
   async create(createShareDto: CreateShareDto, owner_id?: number) {
@@ -49,9 +54,26 @@ export class SharesService {
       order: { createdAt: 'DESC' },
     });
 
+    const output = await Promise.all(
+      results.map(async (item) => {
+        let content;
+        if (item.resource_type == ResourceTypeEnum.MEDIA) {
+          let media = await this.mediaService.findOne(item.resource_id);
+          content = media.data;
+        } else {
+          let album = await this.albumsService.findOne(item.resource_id);
+          content = album.data;
+        }
+        return {
+          ...item,
+          content
+        }
+      })
+    );
+
     return {
       status: 'success',
-      data: results,
+      data: output,
     };
   }
 

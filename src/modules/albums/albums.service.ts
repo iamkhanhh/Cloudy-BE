@@ -62,8 +62,8 @@ export class AlbumsService {
     };
   }
 
-  async update(updateAlbumDto: UpdateAlbumDto) {
-    const { id, ...rest } = updateAlbumDto;
+  async update(updateAlbumDto: UpdateAlbumDto, id: number) {
+    const { ...rest } = updateAlbumDto;
 
     const existingAlbum = await this.albumsRepository.findOne({
       where: { id, is_deleted: 0 },
