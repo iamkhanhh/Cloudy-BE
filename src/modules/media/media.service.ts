@@ -1,11 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not, In, Like } from 'typeorm';
-import { Media, AlbumMedia } from '@/entities';
+import { Media, AlbumMedia, EmailLogs, EmailAttachments } from '@/entities';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
+import { SendEmailWithMediaDto } from './dto/send-email-with-media.dto';
 import { S3Provider } from '@/common/providers/s3.provider';
 import { AlbumsService } from '../albums/albums.service';
+import { MailerService } from '@nestjs-modules/mailer';
+import { EmailStatusEnum } from '@/enums';
 
 @Injectable()
 export class MediaService {
@@ -14,8 +17,13 @@ export class MediaService {
     private readonly mediaRepository: Repository<Media>,
     @InjectRepository(AlbumMedia)
     private readonly albumMediaRepository: Repository<AlbumMedia>,
+    @InjectRepository(EmailLogs)
+    private readonly emailLogsRepository: Repository<EmailLogs>,
+    @InjectRepository(EmailAttachments)
+    private readonly emailAttachmentsRepository: Repository<EmailAttachments>,
     private readonly s3Provider: S3Provider,
-    private readonly albumsService: AlbumsService
+    private readonly albumsService: AlbumsService,
+    private readonly mailerService: MailerService
   ) {}
 
   async create(createMediaDto: CreateMediaDto, userId: number) {
@@ -203,5 +211,69 @@ export class MediaService {
       data: mediaWithUrls,
       albums: dataAlbums.data,
     };
+  }
+
+  async sendEmailWithMedia(sendEmailDto: SendEmailWithMediaDto, userId: number) {
+    const { to_email, subject, body, media_id } = sendEmailDto;
+
+    const media = await this.mediaRepository.findOne({
+      where: { id: media_id, is_deleted: 0 },
+    });
+
+    if (!media) {
+      throw new BadRequestException('Media not found');
+    }
+
+    if (media.owner_id !== userId) {
+      throw new BadRequestException('You do not have permission to share this media');
+    }
+
+    const emailLog = new EmailLogs();
+    emailLog.sender_id = userId;
+    emailLog.to_email = to_email;
+    emailLog.subject = subject;
+    emailLog.body = body;
+    emailLog.status = EmailStatusEnum.QUEUED;
+
+    try {
+      const fileBuffer = await this.s3Provider.getFileFromS3(media.file_path);
+
+      await this.mailerService.sendMail({
+        to: to_email,
+        subject: subject,
+        html: body,
+        attachments: [
+          {
+            filename: media.filename,
+            content: fileBuffer,
+            contentType: media.mime_type,
+          },
+        ],
+      });
+
+      emailLog.status = EmailStatusEnum.SENT;
+      const savedEmailLog = await this.emailLogsRepository.save(emailLog);
+
+      const emailAttachment = new EmailAttachments();
+      emailAttachment.email_id = savedEmailLog.id;
+      emailAttachment.media_id = media.id;
+      await this.emailAttachmentsRepository.save(emailAttachment);
+
+      return {
+        status: 'success',
+        message: 'Email sent successfully',
+        data: {
+          email_id: savedEmailLog.id,
+          to: to_email,
+          subject: subject,
+        },
+      };
+    } catch (error) {
+      emailLog.status = EmailStatusEnum.FAILED;
+      emailLog.error_message = error.message;
+      await this.emailLogsRepository.save(emailLog);
+
+      throw new BadRequestException(`Failed to send email: ${error.message}`);
+    }
   }
 }

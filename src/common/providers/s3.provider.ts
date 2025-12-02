@@ -52,6 +52,16 @@ export class S3Provider {
         return `${baseName}-${timeStamp}-${uuidv4()}${extension}`;
     }
 
+    async getFileFromS3(fileName: string): Promise<Buffer> {
+        const params = {
+            Bucket: this.configService.get<string>('AWS_BUCKET'),
+            Key: fileName,
+        };
+
+        const data = await this.s3Client.getObject(params).promise();
+        return data.Body as Buffer;
+    }
+
     /**
      * Get content type (MIME type) from file extension
      */

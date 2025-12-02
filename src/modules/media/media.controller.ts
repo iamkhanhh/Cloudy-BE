@@ -15,6 +15,7 @@ import { MediaService } from './media.service';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { GenerateSinglePresignedUrl } from './dto/generate-single-presigned-url.dto';
+import { SendEmailWithMediaDto } from './dto/send-email-with-media.dto';
 
 @ApiTags('media')
 @ApiBearerAuth('JWT-auth')
@@ -96,5 +97,17 @@ export class MediaController {
   @ApiResponse({ status: 404, description: 'Media item not found' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.mediaService.remove(id);
+  }
+
+  @Post('send-email')
+  @ApiOperation({ summary: 'Send email with media attachment', description: 'Send an email with a media file as attachment' })
+  @ApiResponse({ status: 200, description: 'Email sent successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input or media not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  sendEmailWithMedia(
+    @Body() sendEmailDto: SendEmailWithMediaDto,
+    @Request() req
+  ) {
+    return this.mediaService.sendEmailWithMedia(sendEmailDto, req.user.id);
   }
 }
