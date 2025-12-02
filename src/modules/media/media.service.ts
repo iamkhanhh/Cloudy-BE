@@ -105,6 +105,39 @@ export class MediaService {
     };
   }
 
+  async generateSinglePresignedUrl(fileName: string, user_id: number, albumId: number) {
+    let uploadName = this.s3Provider.generateFileName(fileName);
+    let filePathUpload = albumId != null ? `${user_id}/${albumId}/${uploadName}` : `${user_id}/${uploadName}`;
+    let data = await this.s3Provider.generateSinglePresignedUrl(filePathUpload)
+    return {
+      status: 'success',
+      message: 'Generate single presigned url successfully',
+      data: {
+        url: data.url,
+        uploadName,
+        contentType: data.contentType
+      }
+    }
+  }
+
+  async download(user_id: number, mediaId: number) {
+    let existingMedia = await this.mediaRepository.findOne({
+      where: { id: mediaId, is_deleted: 0 },
+    });
+
+    if (!existingMedia) {
+      throw new BadRequestException('Media not found');
+    }
+
+    return {
+      status: "success",
+      message: "Get download link succssfully",
+      data: {
+        url: await this.s3Provider.getS3Url(existingMedia.filename, existingMedia.mime_type)
+      }
+    }
+  }
+
   async update(updateMediaDto: UpdateMediaDto, id: number) {
     const { ...rest } = updateMediaDto;
 

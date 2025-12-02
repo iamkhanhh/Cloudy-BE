@@ -14,12 +14,29 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@ne
 import { MediaService } from './media.service';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
+import { GenerateSinglePresignedUrl } from './dto/generate-single-presigned-url.dto';
 
 @ApiTags('media')
 @ApiBearerAuth('JWT-auth')
 @Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
+
+  @Post('generate-single-presigned-url')
+  generateSinglePresignedUrl(
+    @Body() generateSinglePresignedUrl: GenerateSinglePresignedUrl,
+    @Request() req,
+  ) {
+    return this.mediaService.generateSinglePresignedUrl(generateSinglePresignedUrl.fileName, req.user.id, generateSinglePresignedUrl.albumId);
+  }
+
+  @Post('download/:id')
+  download(
+    @Request() req,
+    @Param('id', ParseIntPipe) id: number
+  ) {
+    return this.mediaService.download(req.user.id, id);
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create media', description: 'Upload and create a new media item' })
