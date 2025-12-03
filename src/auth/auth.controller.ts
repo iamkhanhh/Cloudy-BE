@@ -1,10 +1,11 @@
-import { Controller, Post, UseGuards, Request, Get, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, UseGuards, Request, Get, Body, Param, ParseIntPipe, Put } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './passport/local-auth.guard';
 import { JwtAuthGuard } from './passport/jwt-auth.guard';
 import { Public } from '@/decorators';
 import { CreateAuthDto } from './dto/create-auth.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @ApiTags('auth')
 @ApiBearerAuth('JWT-auth')
@@ -62,5 +63,17 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   getCurrentUser(@Request() req) {
     return this.authService.getCurrentUser(req.user.id);
+  }
+
+  @Put('change-password')
+  @ApiOperation({ summary: 'Change password', description: 'Change password for authenticated user' })
+  @ApiResponse({ status: 200, description: 'Password changed successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid current password or validation error' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  changePassword(
+    @Request() req,
+    @Body() changePasswordDto: ChangePasswordDto
+  ) {
+    return this.authService.changePassword(req.user.id, changePasswordDto);
   }
 }

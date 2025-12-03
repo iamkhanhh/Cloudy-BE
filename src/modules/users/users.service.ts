@@ -124,11 +124,11 @@ export class UsersService {
   async findByEmail(email: string) {
     return await this.usersRepository.findOne({ where: { email } });
   }
-  async update(updateUserDto: UpdateUserDto) {
-    const { id, password, ...rest } = updateUserDto;
+  async update(userId: number, updateUserDto: UpdateUserDto) {
+    const { password, ...rest } = updateUserDto;
 
     // Check if user exists
-    const existingUser = await this.usersRepository.findOne({ where: { id, is_deleted: 0 } });
+    const existingUser = await this.usersRepository.findOne({ where: { id: userId, is_deleted: 0 } });
     if (!existingUser) {
       throw new BadRequestException('User not found');
     }
@@ -147,7 +147,7 @@ export class UsersService {
       updateData.password = await this.hashingPasswordProvider.hashPasswordHelper(password);
     }
 
-    await this.usersRepository.update({ id }, updateData);
+    await this.usersRepository.update({ id: userId }, updateData);
 
     return {
       status: 'success',

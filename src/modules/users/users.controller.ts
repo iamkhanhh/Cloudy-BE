@@ -51,13 +51,13 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update user', description: 'Update user information' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update({ ...updateUserDto, id });
+  update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(req.user.id, updateUserDto);
   }
 
   @Delete(':id')

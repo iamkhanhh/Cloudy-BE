@@ -4,14 +4,6 @@ import { UserRoleEnum } from "@/enums/user-role.enum";
 import { UserStatusEnum } from "@/enums/user-status.enum";
 
 export class UpdateUserDto {
-  @ApiProperty({
-    description: 'User ID',
-    example: 1
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  id: number;
-
   @ApiPropertyOptional({
     description: 'User email address',
     example: 'john.doe@example.com'
