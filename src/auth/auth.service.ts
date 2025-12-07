@@ -95,4 +95,8 @@ export class AuthService {
       message: 'Password changed successfully',
     };
   }
+
+  async resendActivationCode(email: string) {
+    return await this.usersService.resendActivationCode(email);
+  }
 }

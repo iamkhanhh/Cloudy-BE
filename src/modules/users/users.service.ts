@@ -237,6 +237,45 @@ export class UsersService {
     }
   }
 
+  async resendActivationCode(email: string) {
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new BadRequestException('This account is not exist!')
+    }
+
+    if (user.status === UserStatusEnum.ACTIVE) {
+      throw new BadRequestException('This account is already active!')
+    }
+
+    const newCode = this.generateActivationCode();
+    const newExpiry = dayjs().add(30, 'minutes').toDate();
+
+    await this.usersRepository.update({ id: user.id }, {
+      codeId: newCode,
+      codeExpired: newExpiry
+    });
+
+    this.mailerService
+      .sendMail({
+        to: user.email,
+        subject: 'Activate your account - New Code',
+        template: "register",
+        context: {
+          name: user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : user.email,
+          activationCode: newCode
+        }
+      })
+
+    return {
+      status: 'success',
+      message: 'A new activation code has been sent to your email!',
+      data: {
+        id: user.id,
+        email: user.email
+      }
+    };
+  }
+
   async getUserStorage(userId: number) {
     const user = await this.usersRepository.findOne({ where: { id: userId, is_deleted: 0 } });
     if (!user) {

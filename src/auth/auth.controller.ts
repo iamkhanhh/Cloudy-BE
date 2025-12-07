@@ -57,6 +57,24 @@ export class AuthController {
     return this.authService.activateAccount(activateDto, id);
   }
 
+  @Public()
+  @Post('resend-otp')
+  @ApiOperation({ summary: 'Resend activation code', description: 'Resend OTP/activation code to user email' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: { type: 'string', example: 'user@example.com' },
+      },
+      required: ['email'],
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Activation code sent successfully' })
+  @ApiResponse({ status: 400, description: 'Account not found or already active' })
+  resendActivationCode(@Body() body: { email: string }) {
+    return this.authService.resendActivationCode(body.email);
+  }
+
   @Get('me')
   @ApiOperation({ summary: 'Get current user', description: 'Get current authenticated user information' })
   @ApiResponse({ status: 200, description: 'Current user retrieved successfully' })
