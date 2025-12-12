@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cloudy Help Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body
+    style="margin: 0; padding: 0; min-width: 100%; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.5; background-color: #FAFAFA; color: #222222;">
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="background-color: #dc2626; padding: 24px; color: #ffffff;">
+            <h1
+                style="font-size: 24px; font-weight: 700; line-height: 1.25; margin-top: 0; margin-bottom: 15px; text-align: center;">
+                Help Report from User</h1>
+        </div>
+        <div style="padding: 24px; background-color: #ffffff;">
+            <h2 style="font-size: 20px; font-weight: 700; margin-top: 0; margin-bottom: 16px; color: #dc2626;">
+                {{title}}</h2>
+
+            <div style="margin-bottom: 24px; padding: 16px; background-color: #f9fafb; border-left: 4px solid #dc2626;">
+                <p style="margin: 0; font-weight: 600;">User Information:</p>
+                <p style="margin: 8px 0 0 0;">
+                    <strong>Name:</strong> {{userName}}<br>
+                    <strong>Email:</strong> {{userEmail}}<br>
+                    <strong>User ID:</strong> {{userId}}<br>
+                    <strong>Report Date:</strong> {{reportDate}}
+                </p>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <p style="margin: 0 0 8px 0; font-weight: 600;">Problem Details:</p>
+                <div style="padding: 16px; background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px;">
+                    <p style="margin: 0; white-space: pre-wrap;">{{details}}</p>
+                </div>
+            </div>
+
+            <div style="padding: 16px; background-color: #fef3c7; border: 1px solid #fde68a; border-radius: 8px;">
+                <p style="margin: 0; font-size: 14px;">
+                    ⚠️ <strong>Action Required:</strong> Please review this report and respond to the user at <a href="mailto:{{userEmail}}" style="color: #dc2626; text-decoration: underline;">{{userEmail}}</a>
+                </p>
+            </div>
+        </div>
+        <div style="background-color: #f6f6f6; padding: 24px;">
+            <p style="margin-top: 0; margin-bottom: 24px; font-size: 14px; text-align: center; color: #666666;">
+                This is an automated message from @Cloudy Help & Support System<br>
+                <a href="https://www.linkedin.com/in/iamkhanh/" target="_blank"
+                    style="color: #000; text-decoration:none;">@Cloudy
+                </a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

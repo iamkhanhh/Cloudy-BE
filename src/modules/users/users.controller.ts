@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@ne
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateReportDto } from './dto/create-report.dto';
 
 @ApiTags('users')
 @ApiBearerAuth('JWT-auth')
@@ -67,5 +68,15 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
+  }
+
+  @Post('report')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Submit help report', description: 'Submit a help/bug report from user' })
+  @ApiResponse({ status: 200, description: 'Report submitted successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  submitReport(@Request() req, @Body() createReportDto: CreateReportDto) {
+    return this.usersService.submitReport(req.user.id, createReportDto);
   }
 }

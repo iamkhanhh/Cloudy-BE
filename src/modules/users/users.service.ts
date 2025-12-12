@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAuthDto } from '@/auth/dto/create-auth.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateReportDto } from './dto/create-report.dto';
 import * as dayjs from 'dayjs';
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -340,5 +341,41 @@ export class UsersService {
       status: 'success',
       data: storageInGB
     };
+  }
+
+  async submitReport(userId: number, createReportDto: CreateReportDto) {
+    const { title, details } = createReportDto;
+
+    // Lấy thông tin user
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    // Gửi email report đến admin
+    try {
+      await this.mailerService.sendMail({
+        to: 'khanh2004109+cloudy-support@gmail.com', // Email admin
+        subject: `[Help Report] ${title}`,
+        template: 'help-report', // Template sẽ tạo ở bước sau
+        context: {
+          userName: user.first_name && user.last_name
+            ? `${user.first_name} ${user.last_name}`
+            : user.email,
+          userEmail: user.email,
+          userId: user.id,
+          title: title,
+          details: details,
+          reportDate: dayjs().format('DD/MM/YYYY HH:mm:ss')
+        }
+      });
+
+      return {
+        status: 'success',
+        message: 'Report submitted successfully. We will review and get back to you soon.'
+      };
+    } catch (error) {
+      throw new BadRequestException('Failed to submit report. Please try again later.');
+    }
   }
 }
