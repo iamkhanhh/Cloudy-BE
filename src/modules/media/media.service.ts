@@ -37,7 +37,7 @@ export class MediaService {
     if (createMediaDto.duration_ms) newMedia.duration_ms = createMediaDto.duration_ms;
     if (createMediaDto.visibility) newMedia.visibility = createMediaDto.visibility;
     newMedia.caption = createMediaDto.caption;
-    newMedia.file_path = createMediaDto.file_path;
+    newMedia.file_path = `${userId}/${createMediaDto.albumsId ? createMediaDto.albumsId + "/" + createMediaDto.file_path : createMediaDto.file_path}`;
 
     const savedMedia = await this.mediaRepository.save(newMedia);
 
