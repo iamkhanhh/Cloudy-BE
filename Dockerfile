@@ -14,4 +14,4 @@ COPY . .
 EXPOSE 3000
 
 # Keep container running for development
-CMD ["tail", "-f", "/dev/null"]
+CMD ["npm", "run", "start:dev"]
