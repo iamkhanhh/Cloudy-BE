@@ -10,7 +10,7 @@ services:
       MYSQL_ROOT_PASSWORD: khanh123
       MYSQL_DATABASE: cloudy
     ports:
-      - "33069:3306"
+      - "33068:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./cloudy.sql:/docker-entrypoint-initdb.d/cloudy.sql
